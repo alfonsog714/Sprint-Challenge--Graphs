@@ -1,7 +1,7 @@
 from room import Room
 from player import Player
 from world import World
-from util import Queue, Graph
+from util import Stack, Queue, Graph
 
 import random
 
@@ -36,7 +36,8 @@ You are responsible for filling traversalPath with directions that, when walked 
 #   0: {'n': ?, 's': ?, 'w': ?, 'e': ?}
 # }
 
-traversalPath = ['n', 's']
+
+traversalPath = []
 # traversal_graph = Graph()
 
 # print(world.startingRoom.getRoomInDirection('n'))
@@ -45,23 +46,80 @@ traversalPath = ['n', 's']
 def bft(starting_room):
     qq = Queue()
     visited = {}
+    # traversal_graph = Graph()
 
-    qq.enqueue(starting_room)
+    qq.enqueue([starting_room])
 
     while qq.size() > 0:
-        current_room = qq.dequeue()
+        path = qq.dequeue()
+        current_room = path[-1]
 
         if current_room.id not in visited:
+            # traversal_graph.add_room(current_room.id)
+
             visited[current_room.id] = current_room.getExits()
             # print(current_room.id, current_room.getExits())
 
             for direction in current_room.getExits():
-                qq.enqueue(current_room.getRoomInDirection(direction))
+                # if traversal_graph.rooms[current_room.id][direction] == '?':
+                #     pass
+                # traversalPath.append(direction)
+                # qq.enqueue(current_room.getRoomInDirection(direction))
+                path_copy = list(path)
+                path_copy.append(current_room.getRoomInDirection(direction))
+                qq.enqueue(path_copy)
 
-    return len(visited)
+    return [room.id for room in path]
+
+
+# def dft(starting_room):
+#     stack = Stack()
+#     # traversal_graph = Graph()
+#     visited = {}
+#     stack.push(starting_room)
+#     test_player = Player("Name", starting_room)
+
+#     while stack.size() > 0:
+#         current_room = stack.pop()
+
+#         if current_room.id not in visited:
+#             visited[current_room.id] = current_room.getExits()
+
+#             for direction in current_room.getExits():
+
+#                 stack.push(current_room.getRoomInDirection(direction))
+
+#     return visited
+    #     if current_room.id not in traversal_graph.rooms:
+    #         traversal_graph.add_room(current_room.id)
+
+    #         for direction in traversal_graph.rooms[current_room.id]:
+    #             if direction == '?':
+    #                 if current_room.getRoomInDirection(direction) is not None:
+    #                     next_room = current_room.getRoomInDirection(direction)
+    #                     player.travel(direction)
+    #                     traversalPath.append(direction)
+
+    #                     traversal_graph.add_room(next_room.id)
+    #                     traversal_graph.add_connection(
+    #                         current_room, next_room, direction)
+
+    #                     stack.push(next_room)
+
+    # return traversal_graph.rooms
 
 
 print(bft(world.startingRoom))
+
+# print('\n---dft----\n')
+
+# print(dft(world.startingRoom))
+
+print('\n----traversalPath---\n')
+
+print(traversalPath)
+
+# print(traversalPath)
 
 # TRAVERSAL TEST
 # visited_rooms = set()

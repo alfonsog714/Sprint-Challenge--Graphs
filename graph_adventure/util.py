@@ -36,6 +36,16 @@ class Graph:
     def __init__(self):
         self.rooms = {}
 
+    def flip(self, d):
+        if d == 'n':
+            return 's'
+        elif d == 's':
+            return 'n'
+        elif d == 'w':
+            return 'e'
+        elif d == 'e':
+            return 'w'
+
     def add_room(self, room_id):
         if room_id not in self.rooms:
             self.rooms[room_id] = {'n': '?', 's': '?', 'w': '?', 'e': '?'}
@@ -45,6 +55,7 @@ class Graph:
         r2_id = r2.id
 
         if r1_id in self.rooms and r2_id in self.rooms:
-            self.rooms[r1_id][direction] = r2
+            self.rooms[r1_id][direction] = r2_id
+            self.rooms[r2_id][self.flip(direction)] = r1_id
         else:
             raise IndexError('That vertex does not exist!')
