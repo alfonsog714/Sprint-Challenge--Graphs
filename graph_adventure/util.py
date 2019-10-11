@@ -34,14 +34,17 @@ class Stack():
 
 class Graph:
     def __init__(self):
-        self.vertices = {}
+        self.rooms = {}
 
-    def add_vertex(self, vertex_id):
-        if vertex_id not in self.vertices:
-            self.vertices[vertex_id] = set()
+    def add_room(self, room_id):
+        if room_id not in self.rooms:
+            self.rooms[room_id] = {'n': '?', 's': '?', 'w': '?', 'e': '?'}
 
-    def add_edge(self, v1, v2):
-        if v1 in self.vertices and v2 in self.vertices:
-            self.vertices[v1].add(v2)
+    def add_connection(self, r1, r2, direction):
+        r1_id = r1.id
+        r2_id = r2.id
+
+        if r1_id in self.rooms and r2_id in self.rooms:
+            self.rooms[r1_id][direction] = r2
         else:
             raise IndexError('That vertex does not exist!')
