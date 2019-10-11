@@ -11,7 +11,6 @@ class World:
         self.gridSize = 0
 
     def loadGraph(self, roomGraph):
-        # the length of the graph, AKA how many rooms are in the graph.
         numRooms = len(roomGraph)
         rooms = [None] * numRooms  # An array of None
         gridSize = 1
