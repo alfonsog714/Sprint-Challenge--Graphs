@@ -9,8 +9,7 @@ import random
 # Load world
 world = World()
 
-# You may uncomment the smaller graphs for development and testing purposes.
-
+roomGraph = roomGraph_1
 
 world.loadGraph(roomGraph)
 world.printRooms()
@@ -31,11 +30,7 @@ You are responsible for filling traversalPath with directions that, when walked 
 
 """
 
-
-# traversal_graph = Graph()
-# print(world.startingRoom.getRoomInDirection('n'))
-
-traversalPath = ['n', 's']
+### HELPER FUNCTIONS ###
 
 
 def flip(d):
@@ -47,6 +42,22 @@ def flip(d):
         return 'e'
     elif d == 'e':
         return 'w'
+
+### ### ### ### ### ### ###
+
+
+traversalPath = ['n', 's']
+
+
+def traverse(world, player):
+    visited_rooms = set()
+    stack = Stack()
+    room_graph = {}
+
+    current_room = player.currentRoom
+    visited_rooms.add(current_room)
+    room_exits = current_room.getExits()
+    neighbor_rooms = dict((d, '?') for d in room_exits)
 
 
 # def bft(starting_room):
@@ -122,23 +133,23 @@ def flip(d):
 #                 stack.push(current_room.getRoomInDirection(direction))
 
 #     return visited
-    #     if current_room.id not in traversal_graph.rooms:
-    #         traversal_graph.add_room(current_room.id)
+#     if current_room.id not in traversal_graph.rooms:
+#         traversal_graph.add_room(current_room.id)
 
-    #         for direction in traversal_graph.rooms[current_room.id]:
-    #             if direction == '?':
-    #                 if current_room.getRoomInDirection(direction) is not None:
-    #                     next_room = current_room.getRoomInDirection(direction)
-    #                     player.travel(direction)
-    #                     traversalPath.append(direction)
+#         for direction in traversal_graph.rooms[current_room.id]:
+#             if direction == '?':
+#                 if current_room.getRoomInDirection(direction) is not None:
+#                     next_room = current_room.getRoomInDirection(direction)
+#                     player.travel(direction)
+#                     traversalPath.append(direction)
 
-    #                     traversal_graph.add_room(next_room.id)
-    #                     traversal_graph.add_connection(
-    #                         current_room, next_room, direction)
+#                     traversal_graph.add_room(next_room.id)
+#                     traversal_graph.add_connection(
+#                         current_room, next_room, direction)
 
-    #                     stack.push(next_room)
+#                     stack.push(next_room)
 
-    # return traversal_graph.rooms
+# return traversal_graph.rooms
 # print(bft(world.startingRoom))
 
 # # print('\n---dft----\n')
@@ -152,9 +163,7 @@ def flip(d):
 # print('\n----traversalPath---\n')
 
 # print(traversalPath)
-
 # print(traversalPath)
-
 # TRAVERSAL TEST
 visited_rooms = set()
 player.currentRoom = world.startingRoom
