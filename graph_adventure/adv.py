@@ -4,13 +4,14 @@ from world import World
 from util import Stack, Queue, Graph
 from graphs.graph_1 import roomGraph_1
 from graphs.graph_2 import roomGraph_2
+from graphs.graph_5 import roomGraph_5
 
 import random
 
 # Load world
 world = World()
 
-roomGraph = roomGraph_2
+roomGraph = roomGraph_5
 
 world.loadGraph(roomGraph)
 world.printRooms()
@@ -47,10 +48,10 @@ def flip(d):
 ### ### ### ### ### ### ###
 
 
-traversalPath = ['n', 's']
+traversalPath = []
 
 
-def traverse(world, player, path=[]):
+def traversal(world, player, path=[]):
     visited_rooms = set()
     stack = Stack()
     room_graph = {}
@@ -73,15 +74,33 @@ def traverse(world, player, path=[]):
 
         if next_direction is None:
             next_direction = stack.pop()
+        else:
+            stack.push(flip(next_direction))
 
         prev_room = current_room
         player.travel(next_direction)
         path.append(next_direction)
+        current_room = player.currentRoom
+        room_graph[prev_room.id][1][next_direction] = current_room.id
 
+        if current_room not in visited_rooms:
+            room_exits = current_room.getExits()
+            neighbor_rooms = dict((d, '?') for d in room_exits)
+            room_x = current_room.getCoords()[0]
+            room_y = current_room.getCoords()[1]
+            room_graph[current_room.id] = [(room_x, room_y), neighbor_rooms]
+            visited_rooms.add(current_room)
+        else:
+            neighbor_rooms = room_graph[current_room.id][1]
+            neighbor_rooms[flip(next_direction)] = prev_room.id
+            room_graph[current_room.id] = [
+                (current_room.x, current_room.y), neighbor_rooms]
+
+        next_direction = None
     return path
 
 
-traverse(world, player)
+traversalPath = traversal(world, player)
 # def bft(starting_room):
 #     qq = Queue()
 #     visited = set()
