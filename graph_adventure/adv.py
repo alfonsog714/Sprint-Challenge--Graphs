@@ -3,13 +3,14 @@ from player import Player
 from world import World
 from util import Stack, Queue, Graph
 from graphs.graph_1 import roomGraph_1
+from graphs.graph_2 import roomGraph_2
 
 import random
 
 # Load world
 world = World()
 
-roomGraph = roomGraph_1
+roomGraph = roomGraph_2
 
 world.loadGraph(roomGraph)
 world.printRooms()
@@ -49,7 +50,7 @@ def flip(d):
 traversalPath = ['n', 's']
 
 
-def traverse(world, player):
+def traverse(world, player, path=[]):
     visited_rooms = set()
     stack = Stack()
     room_graph = {}
@@ -58,8 +59,29 @@ def traverse(world, player):
     visited_rooms.add(current_room)
     room_exits = current_room.getExits()
     neighbor_rooms = dict((d, '?') for d in room_exits)
+    room_x = current_room.getCoords()[0]
+    room_y = current_room.getCoords()[1]
+    room_graph[current_room.id] = [(room_x, room_y), neighbor_rooms]
+
+    # print(f"Print room_graph:\n {room_graph}")
+    # print()
+
+    while len(visited_rooms) < len(world.rooms):
+        for direction in room_graph[current_room.id][1].keys():
+            if room_graph[current_room.id][1][direction] == '?':
+                next_direction = direction
+
+        if next_direction is None:
+            next_direction = stack.pop()
+
+        prev_room = current_room
+        player.travel(next_direction)
+        path.append(next_direction)
+
+    return path
 
 
+traverse(world, player)
 # def bft(starting_room):
 #     qq = Queue()
 #     visited = set()
@@ -159,9 +181,7 @@ def traverse(world, player):
 # print('\n-------\n')
 
 # print(get_directions(bft(world.startingRoom)))
-
 # print('\n----traversalPath---\n')
-
 # print(traversalPath)
 # print(traversalPath)
 # TRAVERSAL TEST
